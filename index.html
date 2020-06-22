@@ -91,23 +91,25 @@
         $('#currentDay').html(currentDate);
 
         for (let hr = 0; hr < hours.length; hr++){
-          var end = hours[hr] + 1;
-          if (hr < 2) {
-            end = end+":00am";
+          var end;
+          if (hr < 3) {
+            end0 = hours[hr]+":00am";
+            end1 = hours[hr]+":59am";
           } else {
-            end = end+":00pm";
+            end0 = hours[hr]+":00pm";
+            end1 = hours[hr]+":59pm";
           }
-          var endTime = moment(end,'h:mma');
-          currentTime = moment("11:00am", 'h:mma');
-          var pastEvent = currentTime.isAfter(endTime);
-          var futureEvent = currentTime.isBefore(endTime);
+          var endTime0 = moment(end0,'h:mma');
+          var endTime1 = moment(end1,'h:mma');
+          var pastEvent = currentTime.isSameOrAfter(endTime0);
+          var futureEvent = currentTime.isBefore(endTime1);
           if (debug){
-            console.log("pastEvent::Row" + hr + " " + currentTime.format('h:mma') + " > " + endTime.format('h:mma') + " = " + pastEvent);
-            console.log("futureEvent::Row" + hr + " " + currentTime.format('h:mma') + " > " + endTime.format('h:mma') + " = " + futureEvent);
+            console.log("pastEvent::Row" + hr + " " + currentTime.format('h:mma') + " isAfter " + endTime0.format('h:mma') + " = " + pastEvent);
+            console.log("futureEvent::Row" + hr + " " + currentTime.format('h:mma') + " isBefore " + endTime1.format('h:mma') + " = " + futureEvent);
           }
-          if (futureEvent) {
+          if (futureEvent & !pastEvent) {
             $('#eventDetails'+hr).addClass('futureEvent');
-          } else if (pastEvent) {
+          } else if (pastEvent & !futureEvent) {
             $('#eventDetails'+hr).addClass('pastEvent');
           } else {
             $('#eventDetails'+hr).addClass('currentEvent');
