@@ -69,3 +69,26 @@ textarea{
   font-size: 20px;
   transition: all .3s ease-in-out;
 }
+
+#workday {
+  text-align: center;
+  color: black;
+  font-weight: bold;
+}
+
+.pastEvent {
+  background: gray;
+  color: black;
+}
+
+.currentEvent {
+  background: red;
+  color: black;
+
+}
+
+.futureEvent {
+  background: green;
+  color: black;
+
+}

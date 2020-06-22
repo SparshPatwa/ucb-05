@@ -18,21 +18,116 @@
       href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="./Assets/style.css" />
     <title>Work Day Scheduler</title>
   </head>
 
   <body>
+    <!-- WORKDAY heading using bootstrap APIs-->
     <header class="jumbotron">
       <h1 class="display-3">Work Day Scheduler</h1>
-      <p class="lead">A simple calendar app for scheduling your work day</p>
       <p id="currentDay" class="lead"></p>
+      <p class="lead">Office Hours: 9AM to 5PM</p>
     </header>
-    <div class="container">
-      <!-- Timeblocks go here -->
-    </div>
+    
+    <!-- WORKDAY table using bootstrap APIs-->
+    <table id="workday" class="table table-bordered table-hover">
+      <thead>
+        <tr>            
+          <th scope="col" style="width: 10%">TIME</th>
+          <th scope="col" style="width: 80%">EVENT</th>
+          <th scope="col" style="width: 10%;">ACTION</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
 
+    <!-- JQUERY script functions-->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script type="text/javascript">
+      // Debug
+      var debug = 1;
+
+      // Define working our arrray
+      var hours = [9,10,11,12,1,2,3,4,5];
+      if (debug)
+        console.log(hours);
+      
+      // Populate rows in table body as per working hours
+      for (let hr = 0; hr < hours.length; hr++) {
+        if (hr < 3) {
+          time = "<td id=\"time\">" + hours[hr] + "AM</td>";
+        } else {
+          time = "<td id=\"time\">" + hours[hr] + "PM</td>";
+        }
+        event = "<td>" + "<input id=\"eventDetails" + hr + "\" type=\"text\" class=\"form-control\">" + "</td>";
+        action = "<td>" + "<button id=\"eventSave" + hr + "\" type=\"button\" class=\"btn btn-primary\"><i class=\"fas fa-edit\"></i></button>" + "</td>";
+        row = "<tr>" + time + event + action + "</tr>";
+        $("#workday tbody").append(row);   
+      }
+      
+      // Display events saved in localstorage 
+      function displayEvents(){
+        for (let hr = 0; hr <hours.length; hr++) {
+          var id = "row"+hr;
+          var value = localStorage.getItem(id);
+          $('#eventDetails'+hr).val(value);
+        }
+      }
+
+      // Get current date/time stamp and update calendar
+      function datetimeStampCalc(){
+        // Get current date/time using moment JS
+        var currentdate = moment();
+        var currentStamp = moment(currentdate, 'MM/DD/YYYY');
+        var currentTime = moment(currentStamp, 'h:mma');
+
+        var currentDate = currentStamp.format('MMM Do, YYYY');
+        if (debug) {
+          console.log("Date= " + currentDate);
+        }
+        $('#currentDay').html(currentDate);
+
+        for (let hr = 0; hr < hours.length; hr++){
+          var end = hours[hr] + 1;
+          if (hr < 2) {
+            end = end+":00am";
+          } else {
+            end = end+":00pm";
+          }
+          var endTime = moment(end,'h:mma');
+          currentTime = moment("11:00am", 'h:mma');
+          var pastEvent = currentTime.isAfter(endTime);
+          var futureEvent = currentTime.isBefore(endTime);
+          if (debug){
+            console.log("pastEvent::Row" + hr + " " + currentTime.format('h:mma') + " > " + endTime.format('h:mma') + " = " + pastEvent);
+            console.log("futureEvent::Row" + hr + " " + currentTime.format('h:mma') + " > " + endTime.format('h:mma') + " = " + futureEvent);
+          }
+          if (futureEvent) {
+            $('#eventDetails'+hr).addClass('futureEvent');
+          } else if (pastEvent) {
+            $('#eventDetails'+hr).addClass('pastEvent');
+          } else {
+            $('#eventDetails'+hr).addClass('currentEvent');
+          }
+        }
+        
+      }
+
+      // Save table event details on action cell click
+      for (let hr = 0; hr < hours.length; hr++){
+        $('#eventSave'+hr).click(function(){
+          var id = "row"+hr;
+          var value = $('#eventDetails'+hr).val();
+          localStorage.setItem(id, value);
+          if (debug)
+            console.log("User Clicked Row" + hr)
+        });
+      }
+      datetimeStampCalc();
+      displayEvents();
+    </script>
   </body>
 </html>
