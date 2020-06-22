@@ -21,7 +21,8 @@ Webpage will also maintain a localstorage and will be persistent across refreshe
 https://sparshpatwa.github.io/ucb-05/
 
 ## **Screenshots**
-![](./Assets/workday-scheduler.png)
+![](./Assets/workday-scheduler-01.png)
+![](./Assets/workday-scheduler-02.png)
 
 ## **Status**
 Deployed using GITHUB
