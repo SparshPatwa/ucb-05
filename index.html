@@ -88,8 +88,7 @@
         if (debug) {
           console.log("Date= " + currentDate);
         }
-        $('#currentDay').html(currentDate);
-
+        $('#currentDay').html(currentDate + " " + currentTime.format('h:mma'));
         for (let hr = 0; hr < hours.length; hr++){
           var end;
           if (hr < 3) {
